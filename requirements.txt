@@ -1,0 +1,6 @@
+pennylane
+pennylane-lightning[gpu]
+pennylane-qulacs
+qulacs
+torch
+torchvision
