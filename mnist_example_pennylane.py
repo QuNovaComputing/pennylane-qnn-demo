@@ -71,6 +71,24 @@ else:
         raise RuntimeError("Cannot use gpu without also using lightning simulator.")
     qml_device = qml.device('qulacs.simulator', wires=nqubits)
 
+
+use_ibmq = True
+if use_ibmq:
+    # Set your IBMQ API key here, or in the pennylane config file (see https://docs.pennylane.ai/en/stable/introduction/configuration.html)
+    ibmq_api_key = ""
+    if ibmq_api_key == "":
+        try:
+            ibmq_api_key = qml.default_config["qiskit.ibmq.ibmqx_token"]
+        except:
+            raise ValueError("You need to set your IBMQ api key in the variable ibmq_api_key or the config file.")
+    
+    # Pick the real device name here.
+    # Some options are "ibm_brisbane", "ibm_kyoto", "ibm_osaka".
+    # A simulator such as "simulator_statevector" or "simulator_mps" can also be selected.
+    ibmq_device_name = "ibm_brisbane"
+    qml_device = qml.device("qiskit.ibmq", ibmqx_token=ibmq_api_key, backend=ibmq_device_name, wires=nqubits)
+    print(f"Successfully set up to run on real device {ibmq_device_name}")
+
 # Here we define the quantum part of the model
 @qml.qnode(qml_device, interface="torch")
 def qnn_layer(inputs, weights):
